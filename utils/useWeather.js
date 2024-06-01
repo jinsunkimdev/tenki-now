@@ -1,4 +1,4 @@
-// hooks/useWeather.js
+// hooks:useWeather.js
 import { useQuery } from "@tanstack/react-query";
 import * as Location from "expo-location";
 

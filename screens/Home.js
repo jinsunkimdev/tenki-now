@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useWeather } from "../utils/useWeather";
 import weatherIcons from "../utils/weatherIcons";
 import { ActivityIndicator } from "react-native";
+
 const WeatherContainer = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.backgroundColor};
@@ -16,11 +17,12 @@ const HeaderContainer = styled.View`
 `;
 const TempText = styled.Text`
   font-size: 58px;
-  font-weight: 600;
+  font-weight: 700;
   color: ${(props) => props.theme.subTextColor};
 `;
 const TinyText = styled.Text`
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
   color: ${(props) => props.theme.textColor};
 `;
 const WeatherIcon = styled(MaterialCommunityIcons)`
@@ -36,24 +38,26 @@ const BodyContainer = styled.View`
 `;
 const Title = styled.Text`
   font-size: 48px;
+  font-weight: 600;
   color: ${(props) => props.theme.textColor};
 `;
 const SubTitle = styled.Text`
   font-size: 24px;
+  font-weight: 600;
   color: ${(props) => props.theme.subTextColor};
 `;
 const HeaderWeatherInfo = styled.View`
-  align-items:center;
+  align-items: center;
 `;
+
 const Home = () => {
   const { data, isLoading, error } = useWeather();
-  // console.log(data);
 
   if (isLoading) {
     return (
       <WeatherContainer>
         <HeaderContainer>
-          <ActivityIndicator size="large"/>
+          <ActivityIndicator size="large" />
         </HeaderContainer>
       </WeatherContainer>
     );

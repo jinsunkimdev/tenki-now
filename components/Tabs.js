@@ -33,8 +33,8 @@ export default function TabNavigator({ toggleTheme, isDark }) {
           );
         },
         tabBarStyle: { backgroundColor: theme.menuBackgroundColor },
-        tabBarActiveTintColor: theme.subTextColor,
-        tabBarInactiveTintColor: theme.backgroundColor,
+        tabBarActiveTintColor: theme.tabBarActiveTintColor,
+        tabBarInactiveTintColor: theme.tabBarInactiveTintColor,
         headerStyle: { backgroundColor: theme.menuBackgroundColor },
         headerTitleStyle: { color: theme.subTextColor },
         headerRight: () => (

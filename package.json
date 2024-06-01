@@ -27,7 +27,10 @@
     "react-native-screens": "3.31.1",
     "react-native-super-grid": "^5.1.0",
     "react-native-svg": "^15.3.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "expo-linear-gradient": "~13.0.2",
+    "react-native-reanimated": "~3.10.1",
+    "@shopify/react-native-skia": "1.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

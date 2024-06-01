@@ -1,24 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NavigationContainer } from "@react-navigation/native";
+import { ThemeProvider as StyledThemeProvider } from "styled-components/native";
 import { useColorScheme } from "react-native";
 import TabNavigator from "./components/Tabs";
 import { darkTheme, lightTheme } from "./theme";
-import { ThemeProvider } from "styled-components";
 
 const queryClient = new QueryClient({});
 
 export default function App() {
-  const isDark = useColorScheme() === "dark";
+  const systemColorScheme = useColorScheme();
+  const [isDark, setIsDark] = useState(systemColorScheme === "dark");
+
+  useEffect(() => {
+    setIsDark(systemColorScheme === "dark");
+  }, [systemColorScheme]);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
+
   const theme = isDark ? darkTheme : lightTheme;
-  console.log("Current color scheme:", isDark ? "dark" : "light");
+
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
+      <StyledThemeProvider theme={theme}>
         <NavigationContainer>
-          <TabNavigator />
+          <TabNavigator toggleTheme={toggleTheme} isDark={isDark} />
         </NavigationContainer>
-      </ThemeProvider>
+      </StyledThemeProvider>
     </QueryClientProvider>
   );
 }

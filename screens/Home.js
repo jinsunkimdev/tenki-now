@@ -43,11 +43,11 @@ const SubTitle = styled.Text`
   color: ${(props) => props.theme.subTextColor};
 `;
 const HeaderWeatherInfo = styled.View`
-  justify-content: center;
+  align-items:center;
 `;
 const Home = () => {
   const { data, isLoading, error } = useWeather();
-  console.log(data);
+  // console.log(data);
 
   if (isLoading) {
     return (
@@ -78,8 +78,8 @@ const Home = () => {
               {data.name}, {data.sys.country}
             </TinyText>
           )}
-          <TempText>{data.main.temp.toFixed(1)}°</TempText>
-          <TinyText>Feels like {data.main.feels_like}</TinyText>
+          <TempText>{data.main.temp.toFixed(1)}℃</TempText>
+          <TinyText>Feels like {data.main.feels_like}℃</TinyText>
         </HeaderWeatherInfo>
       </HeaderContainer>
       <BodyContainer>

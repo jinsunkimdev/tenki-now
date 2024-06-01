@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useWeather } from "../utils/useWeather";
 import { Card } from "react-native-elements";
 import {
@@ -8,8 +8,9 @@ import {
 } from "../utils/customFunctions";
 import * as Progress from "react-native-progress";
 import styled, { withTheme } from "styled-components";
-import Icon from 'react-native-vector-icons/Ionicons';
-import {LinearGradient} from 'expo-linear-gradient';
+import Icon from "react-native-vector-icons/Ionicons";
+import { RefreshControl } from "react-native";
+
 const StyledFlatList = styled.FlatList`
   background-color: ${(props) => props.theme.backgroundColor};
   flex: 1;
@@ -22,7 +23,7 @@ const Container = styled.ScrollView`
 `;
 const TitleContainer = styled.View`
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 `;
@@ -86,13 +87,20 @@ const ThemedProgressBar = withTheme(({ theme, progress }) => (
 ));
 const WeatherIcon = styled(Icon)`
   font-size: 15px;
-  color:${(props)=>props.theme.cardTitleTextColor};
+  color: ${(props) => props.theme.cardTitleTextColor};
   margin-right: 5px;
 `;
 const Weather = () => {
-  const { data, isLoading, error } = useWeather();
+  const { data, isLoading, error,refetch } = useWeather();
+  const [refreshing, setRefreshing] = useState(false);
   const [maxHeights, setMaxHeights] = useState([]);
-  if (isLoading) {
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false)); // 새로고침 후 로딩 상태 해제
+  }, [refetch]);
+
+  if (isLoading && !refreshing) {
+    // 새로고침 중일 때는 로딩 상태를 표시하지 않음
     return (
       <Container>
         <TempText>Loading...</TempText>
@@ -114,53 +122,86 @@ const Weather = () => {
       {
         key: "Humidity",
         value: `${item.main.humidity}%`,
-        progress: item.main.humidity / 100,icon:'water-outline'
+        progress: item.main.humidity / 100,
+        icon: "water-outline",
       },
-      { key: "Pressure", value: `${item.main.pressure} hPa`,icon:'speedometer-outline' },
-      { key: "Visibility", value: `${item.visibility / 1000} km` ,icon:'eye-outline'},
-      { key: "Wind Speed", value: `${item.wind.speed} m/s`,icon:'flag-outline'  },
+      {
+        key: "Pressure",
+        value: `${item.main.pressure} hPa`,
+        icon: "speedometer-outline",
+      },
+      {
+        key: "Visibility",
+        value: `${item.visibility / 1000} km`,
+        icon: "eye-outline",
+      },
+      {
+        key: "Wind Speed",
+        value: `${item.wind.speed} m/s`,
+        icon: "flag-outline",
+      },
       {
         key: "Cloud Cover",
         value: `${item.clouds.all}%`,
         progress: item.clouds.all / 100,
-        icon:'cloudy-outline'
+        icon: "cloudy-outline",
       },
-      { key: "Ground Level", value: `${item.main.grnd_level}hPa`,icon: 'earth-outline'},
-      { key: "Sea Level", value: `${item.main.sea_level}hPa`,icon:'boat-outline' },
-      { key: "Sunrise", value: convertUnixToReadable(item.sys.sunrise),icon: 'sunny-outline' }, // Sunrise 시간 변환
-      { key: "Sunset", value: convertUnixToReadable(item.sys.sunset),icon: 'moon-outline'}, // Sunset 시간 변환
+      {
+        key: "Ground Level",
+        value: `${item.main.grnd_level}hPa`,
+        icon: "earth-outline",
+      },
+      {
+        key: "Sea Level",
+        value: `${item.main.sea_level}hPa`,
+        icon: "boat-outline",
+      },
+      {
+        key: "Sunrise",
+        value: convertUnixToReadable(item.sys.sunrise),
+        icon: "sunny-outline",
+      }, // Sunrise 시간 변환
+      {
+        key: "Sunset",
+        value: convertUnixToReadable(item.sys.sunset),
+        icon: "moon-outline",
+      }, // Sunset 시간 변환
       {
         key: "Min/Max Temperature",
-        value: `Min: ${item.main.temp_min}℃ / Max: ${item.main.temp_max}℃`,icon:'thermometer-outline',
+        value: `Min: ${item.main.temp_min}℃ / Max: ${item.main.temp_max}℃`,
+        icon: "thermometer-outline",
       }, // Min/Max Temperature
     ])
     .flat();
 
   return (
-      <StyledFlatList
-        data={gridData}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={2}
-        columnWrapperStyle={Row}
-        renderItem={({ item, index }) => (
-          <CardContainer style={[getCardStyle(index, maxHeights)]}>
-            <StyledCard
-              onLayout={(event) => handleLayout(event, index, setMaxHeights)}
-            >
-              <TitleContainer>
-                <WeatherIcon name={item.icon} />
-                <CardTitle>{item.key}</CardTitle>
-              </TitleContainer>
-              <Card.Divider />
-              <CardText>{item.value}</CardText>
-              {item.progress !== undefined && (
-                <ThemedProgressBar progress={item.progress} />
-              )}
-            </StyledCard>
-          </CardContainer>
-        )}
-        contentContainerStyle={GridView}
-      />
+    <StyledFlatList
+      data={gridData}
+      keyExtractor={(item, index) => index.toString()}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      numColumns={2}
+      columnWrapperStyle={Row}
+      renderItem={({ item, index }) => (
+        <CardContainer style={[getCardStyle(index, maxHeights)]}>
+          <StyledCard
+            onLayout={(event) => handleLayout(event, index, setMaxHeights)}
+          >
+            <TitleContainer>
+              <WeatherIcon name={item.icon} />
+              <CardTitle>{item.key}</CardTitle>
+            </TitleContainer>
+            <Card.Divider />
+            <CardText>{item.value}</CardText>
+            {item.progress !== undefined && (
+              <ThemedProgressBar progress={item.progress} />
+            )}
+          </StyledCard>
+        </CardContainer>
+      )}
+      contentContainerStyle={GridView}
+    />
   );
 };
 

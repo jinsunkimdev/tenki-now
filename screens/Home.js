@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useWeather } from "../utils/useWeather";
 import weatherIcons from "../utils/weatherIcons";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, RefreshControl, ScrollView } from "react-native";
 
 const WeatherContainer = styled.View`
   flex: 1;
@@ -51,8 +51,12 @@ const HeaderWeatherInfo = styled.View`
 `;
 
 const Home = () => {
-  const { data, isLoading, error } = useWeather();
-
+  const { data, isLoading, error, refetch } = useWeather();
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false)); // 새로고침 후 로딩 상태 해제
+  }, [refetch]);
   if (isLoading) {
     return (
       <WeatherContainer>
@@ -74,22 +78,29 @@ const Home = () => {
   }
   return (
     <WeatherContainer>
-      <HeaderContainer>
-        <WeatherIcon name={weatherIcons[data.weather[0].main]} />
-        <HeaderWeatherInfo>
-          {data.name && data.sys.country && (
-            <TinyText>
-              {data.name}, {data.sys.country}
-            </TinyText>
-          )}
-          <TempText>{data.main.temp.toFixed(1)}℃</TempText>
-          <TinyText>Feels like {data.main.feels_like}℃</TinyText>
-        </HeaderWeatherInfo>
-      </HeaderContainer>
-      <BodyContainer>
-        <Title>{data.weather[0].main}</Title>
-        <SubTitle>{data.weather[0].description}</SubTitle>
-      </BodyContainer>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <HeaderContainer>
+          <WeatherIcon name={weatherIcons[data.weather[0].main]} />
+          <HeaderWeatherInfo>
+            {data.name && data.sys.country && (
+              <TinyText>
+                {data.name}, {data.sys.country}
+              </TinyText>
+            )}
+            <TempText>{data.main.temp.toFixed(1)}℃</TempText>
+            <TinyText>Feels like {data.main.feels_like}℃</TinyText>
+          </HeaderWeatherInfo>
+        </HeaderContainer>
+        <BodyContainer>
+          <Title>{data.weather[0].main}</Title>
+          <SubTitle>{data.weather[0].description}</SubTitle>
+        </BodyContainer>
+      </ScrollView>
     </WeatherContainer>
   );
 };

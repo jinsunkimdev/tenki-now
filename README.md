@@ -3,6 +3,8 @@
 
 # Tenki-Now
 
+The name "Tenki-Now" derives from the Japanese word "天気" (tenki), which means "weather."
+
 Tenki-Now is a sleek and intuitive weather app that provides accurate and real-time weather updates. Built using React Native and Expo, it leverages the OpenWeatherAPI to fetch and display weather information. 
 
 https://github.com/jinsunkimdev/tenki-now/assets/69026725/d052b3c7-f8ee-4858-bbc5-b40171bbb2d5

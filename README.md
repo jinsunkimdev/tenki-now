@@ -1,3 +1,6 @@
+<img alt="React" src ="https://img.shields.io/badge/React Native-61DAFB.svg?&style=flat-square&logo=React&logoColor=white"/> <img alt="Reactquery" src ="https://img.shields.io/badge/Reactquery-FF4154.svg?&style=flat-square&logo=reactquery&logoColor=white"/> <img alt="Expo" src ="https://img.shields.io/badge/Expo-000020.svg?&style=flat-square&logo=expo&logoColor=white"/> <img alt="javascript" src ="https://img.shields.io/badge/Javascript-F7DF1E.svg?&style=flat-square&logo=javascript&logoColor=white"/> <img alt="npm" src ="https://img.shields.io/badge/npm-CB3837.svg?&style=flat-square&logo=npm&logoColor=white"/> <img alt="styledcomponents" src ="https://img.shields.io/badge/styledcomponents-DB7093.svg?&style=flat-square&logo=styledcomponents&logoColor=white"/>
+
+
 # Tenki-Now
 
 Tenki-Now is a sleek and intuitive weather app that provides accurate and real-time weather updates. Built using React Native and Expo, it leverages the OpenWeatherAPI to fetch and display weather information. 
